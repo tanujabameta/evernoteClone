@@ -1,0 +1,41 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "folderName": "Folder1",
+      "files": [
+        {
+          "title": "note",
+          "description": "<p>first one n11</p>",
+          "id": 1
+        },
+        {
+          "title": "Second Note",
+          "description": "<p>12</p>",
+          "id": 2
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "folderName": "Folder2",
+      "files": [
+        {
+          "title": "note2",
+          "description": "<p>first one n21</p>",
+          "id": 4
+        },
+        {
+          "title": "Second Note2",
+          "description": "<p>22</p>",
+          "id": 5
+        }
+      ]
+    },
+    {
+      "folderName": "Folder3",
+      "files": [],
+      "id": 35
+    }
+  ]
+}
