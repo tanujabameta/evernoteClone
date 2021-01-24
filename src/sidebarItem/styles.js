@@ -10,6 +10,7 @@ const styles = theme => ({
     },
     deleteIcon: {
       color:'white',
+      height:'17px',
       position: "absolute",
       right: "2px",
       top: "0px",
@@ -18,7 +19,7 @@ const styles = theme => ({
       }
     },
     clearIcon:{
-  
+      height:'17px',
       position: "relative",
       right:'0px !important',
       top:'0px',

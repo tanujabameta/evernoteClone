@@ -1,41 +1,44 @@
 {
   "data": [
     {
-      "id": "1",
-      "folderName": "Folder1",
       "files": [
         {
-          "title": "note",
-          "description": "<p>first one n11</p>",
-          "id": 1
-        },
-        {
-          "title": "Second Note",
-          "description": "<p>12</p>",
-          "id": 2
+          "title": "new",
+          "description": "<p>Write something here.....</p>"
         }
-      ]
+      ],
+      "id": "root"
     },
     {
-      "id": "2",
-      "folderName": "Folder2",
       "files": [
         {
-          "title": "note2",
-          "description": "<p>first one n21</p>",
-          "id": 4
-        },
-        {
-          "title": "Second Note2",
-          "description": "<p>22</p>",
-          "id": 5
+          "title": "hello",
+          "description": "<p>Write something here.....</p>"
         }
-      ]
+      ],
+      "id": "Folder1"
     },
     {
-      "folderName": "Folder3",
-      "files": [],
-      "id": 35
+      "files": [
+        {
+          "title": "fol2",
+          "description": "<p>hello fol2.</p>"
+        }
+      ],
+      "id": "Folder2"
+    },
+    {
+      "files": [
+        {
+          "title": "fol3note",
+          "description": "<p>fol3note</p>"
+        }
+      ],
+      "id": "Folder3"
+    },
+    {
+      "id": "Folder4",
+      "files": []
     }
   ]
 }

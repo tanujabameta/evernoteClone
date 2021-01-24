@@ -4,68 +4,77 @@ import styles from "./styles";
 import SidebarItemComponent from "./../sidebarItem/sidebaritem";
 
 const SidebarComponent= props =>{
-    const { classes, notes, selectedNoteIndex } = props;
+    const { classes, noteData, selectedNoteIndex } = props;
     const [addingNote, setAddingNotes] = useState(false);
     const [title, setTitle] = useState(null);
+    const [selectedFolder, setFolder] = useState("root");
 
     useEffect(()=>{
       setTitle(title);
-    },[title])
+    },[title]);
+
     
     const newNoteBtnClick=()=>{
-        console.log('new note');
         setAddingNotes(!addingNote);
         setTitle(null);
     }
 
     const updateTitle = txt =>{
         setTitle(txt);
-        console.log(txt);
     }
 
     const newNote =() =>{
-        //console.log(title, addingNote)
-         props.newNote(title);
+         props.newNote({title, selectedFolder});
          newNoteBtnClick();
     }
 
-    const selectNote=(n,i)=>{
-        props.selectNote(n, i);
+    const selectNote=(n,i,f)=>{
+        props.selectNote(n, i,f);
     }
 
-    const deleteNote = (note) => {
-        props.deleteNote(note)
+    const deleteNote = (folder,note) => {
+        props.deleteNote(folder,note)
       };
+
+    const deleteFolder= (folder)=>{
+        props.deleteFolder(folder);
+    }
 
     return(
         <div className={classes.sidebarContainer}>
             <Button onClick={newNoteBtnClick} className={classes.newNoteBtn}>
-                 {addingNote?'Cancel':'New Folder'}
+                 {addingNote?'Cancel':'New Note'}
             </Button>
             {addingNote && (
                 <div>
                     <input className={classes.newNoteInput}
-                     placeholder='Folder Name' type='text' 
+                     placeholder='Note Title' type='text' 
                      onKeyUp ={e => updateTitle(e.target.value)}/>
+                    <select
+                     onChange={e => setFolder(e.target.value)}>
+                        {noteData.map((note, index) => {
+                            return (
+                                <option value={`${note["id"]}`} key={note[0]}>{note["id"]}</option>
+                            );
+                        })
+                        }
+                    </select>
                      <Button className={classes.newNoteSubmitBtn}
-                      onClick={newNote}>Create Folder</Button>
+                      onClick={newNote}>Create Note</Button>
                 </div>
             )}
             {
-            <List>{notes.map((note, index)=>{
-                return(
-                    <div key={index}>
-                        <SidebarItemComponent
-                        note= {note}
-                        index={index}
-                        selectedNoteIndex={selectedNoteIndex}
-                        selectNote={selectNote}
-                        DeleteNote={deleteNote}
-                        />
-                        <Divider/>
-                    </div>
-                )
-            })}</List>
+            <List>
+                <SidebarItemComponent
+                    noteData = {noteData}
+                    selectedNoteIndex={selectedNoteIndex}
+                    selectNote={selectNote}
+                    DeleteNote={deleteNote}
+                    selectedFolder={selectedFolder}
+                    deleteFolder={deleteFolder}
+                    />
+                    <Divider/>
+            </List>
             }
         </div>
     );   

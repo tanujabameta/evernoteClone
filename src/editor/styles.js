@@ -7,6 +7,10 @@ const styles = theme => ({
       width: '300px',
       boxShadow: '0px 0px 2px black'
     },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
     titleInput: {
       height: '35px',
       boxSizing: 'border-box',

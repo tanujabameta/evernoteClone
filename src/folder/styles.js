@@ -27,7 +27,7 @@ const styles = theme => ({
 
     },
     newFolderInput: {
-      width: '100%',
+      width: '80%',
       margin: '0px',
       height: '35px',
       outline: 'none',

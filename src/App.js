@@ -9,62 +9,85 @@ import { Button } from "@material-ui/core";
 function App() {
   const [selectedNoteIndex, setSelectedNoteIndex] = useState(null);
   const [selectedNote, setSelectedNote] = useState(null);
-  const [notes, setNotes] = useState(null);
-  const [Fnames, setFName] = useState(null);
+  const [noteData, setNoteData] = useState(null);
+  const [selectedFolder, setSelectedFolder]= useState(null);
 
+ 
   useEffect(()=>{
-  axios.get('http://localhost:3000/data')
-    .then(resp=> setNotes(resp.data))
-  },[selectedNoteIndex]);
+  axios.get('http://localhost:3000/data/')
+    .then(resp=> setNoteData(resp.data))
+  },[selectedNoteIndex,noteData]);
 
-  const selectNote=(note, index)=>{
-    setSelectedNote(note);
-    setSelectedNoteIndex(index)
+  
+  const selectNote=(note, index, folder)=>
+    {
+      setSelectedNote(note);
+      setSelectedNoteIndex(index);
+      setSelectedFolder(folder);
   }
 
-   const deleteNote= async note=>{
-    const noteIndex = notes.indexOf(note);
-    await setNotes(notes.filter(_note => _note !== note))
-    if(selectedNoteIndex === noteIndex){
-      setSelectedNote(null);
-      setSelectedNoteIndex(null);
-    } else {
-      if (notes.length > 1) {
-        selectNote(notes[selectedNoteIndex - 1], selectedNoteIndex - 1);
-      } else {
+   const deleteNote= async (folder,note)=>
+   {
+        // setNoteData(noteData.filter(_note => _note !== note))
+        // if(selectedNoteIndex === note){
+        //     setSelectedNote(null);
+        //     setSelectedNoteIndex(null);
+        //  } else {
+        // if (noteData.length > 1) 
+        //  selectNote(noteData[selectedNoteIndex - 1], selectedNoteIndex - 1);
+        // else {
+        //   setSelectedNote(null);
+        //   setSelectedNoteIndex(null);
+        //   }
+        // }
+        const currentFolder = noteData.find((fol)=> fol.id === folder);    
+        currentFolder["files"].splice(note,1);
+        await axios.put(`http://localhost:3000/data/${folder}`,{"files": currentFolder['files']});
         setSelectedNote(null);
         setSelectedNoteIndex(null);
-      }
-    }
-   axios.delete(`http://localhost:3000/data/${note.id}`)
   }
-  const newNote= async title=>{
+
+
+  const newNote= async (data)=>{
+    const {title, selectedFolder} = data;
     const note ={
-      folderName: title,
-      files: [],
+      title: title,
+      description: "Write something here.....",
       id: Math.floor((Math.random() * 100) + 1)
     };
-    const newFromDB = await axios.post(`http://localhost:3000/data/`,note);
-    await setNotes([...notes, note]);
-    const newNoteIndex = notes.indexOf(notes.filter(_note => _note.id === `${note.id}`));
-    console.log(newNoteIndex);
-    setSelectedNote(notes[newNoteIndex]);
-    setSelectedNoteIndex(newNoteIndex);
+
+    const currentFolder = noteData.find((folder) => folder.id === selectedFolder);
+    const currentFolderIndex = noteData.indexOf(currentFolder);
+
+    const updatedFolderFiles = [ ...currentFolder["files"], note];
+
+    const updatedFolderData = await axios.put(`http://localhost:3000/data/${selectedFolder}`,{"files": updatedFolderFiles});
+    console.log(updatedFolderData.data)
+    const updatedNodeData = noteData.slice();
+    updatedNodeData[currentFolderIndex] = updatedFolderData.data;
+    setNoteData(updatedNodeData);
   }
 
-  const noteUpdate=(id, noteObj)=>{
-    console.log('update')
-    //axios.put(`http://localhost:3000/data/${id}`,noteObj);
+  const noteUpdate= async (noteObj,ni,folder)=>{
+    const currentFolder = noteData.find((fol) => fol.id === folder);
+    currentFolder["files"].splice(ni,1,noteObj);
+    await axios.put(`http://localhost:3000/data/${folder}`,{"files": currentFolder['files']});
   }
-  
-  const newFolder=async Fname=>{
-    const folder={
-      name: Fname
-    };
-    await axios.post(`http://localhost:3000/folders/`, folder);
-    setFName([...Fnames, folder])
+
+  const newFolder =(n)=>{
+     axios.post(`http://localhost:3000/data/`, {"id":n,"files":[]})
+  }
+
+  const changeFolder=  (oldFolder,newFolder)=>{
+      console.log(oldFolder,newFolder);
+      noteUpdate(selectedNote,selectedNoteIndex,newFolder);
+      console.log(oldFolder, selectedNote)
+      deleteNote(oldFolder,selectedNote);
 
   }
+
+  const deleteFolder= (folder)=> axios.delete(`http://localhost:3000/data/${folder}`);
+   
 
   return (
     <div className='main'>
@@ -74,26 +97,29 @@ function App() {
           deleteNote={deleteNote}
           newNote={newNote}
           selectNote={selectNote}
-          notes={notes || []}
+          noteData={noteData|| [] }
           selectedNoteIndex={selectedNoteIndex}
+          deleteFolder={deleteFolder}
         />
         </div>
-        {selectedNote &&
+        {selectedNote ?
           <div className='editor'>
             <div>
               <EditorComponent
               noteUpdate= {noteUpdate}
+              deleteNote={deleteNote}
               selectedNote={selectedNote}
               selectedNoteIndex={selectedNoteIndex}
-              notes={notes|| []}
+              noteData={noteData || []}
+              selectedFolder={selectedFolder}
+              changeFolder={changeFolder}
               />
             </div>  
             <div className='folderDiv'><Button className='button' onClick={()=>{setSelectedNote(null)}}>Make Folders</Button></div>
-            </div>}
-            {/* {/* // <Folder 
-            // notes={notes || []}
-            // newFolder={newFolder}
-            // />} */}
+            </div>:
+            <Folder
+            newFolder={newFolder}/>
+            }
      </div> 
   );
 }
