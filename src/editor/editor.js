@@ -7,27 +7,29 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import EditIcon from '@material-ui/icons/Edit';
 import classes from "./styles";
 import FormControl from '@material-ui/core/FormControl';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 
 
 const EditorComponent= props=>{
-    const { classes, selectedNote, selectedNoteIndex, noteData, selectedFolder} = props;
+    const { classes, selectedNote, selectedNoteIndex, noteData, selectedFolder, getExpanded} = props;
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
-     const [id, setId] = useState("");
-     const [newFolder, setNewFolder] = useState('');
+    const [newFolder, setNewFolder] = useState('');
+    const [expand, setExpand]= useState(true);
+
 
     //will work on component update
     useEffect(() => {
         setTitle(selectedNote.title);
         setText(selectedNote.description);
-        setId(selectedNote.id);
-        console.log('index' + selectedNoteIndex, "folder"+ selectedFolder );
-      },[selectedFolder,selectedNoteIndex]);
+        setExpand(expand);
+        console.log('index' + selectedNoteIndex, "folder"+ selectedFolder, 'expand', expand );
+      },[selectedFolder,selectedNoteIndex,expand]);
 
-    
     useEffect(() => {
         update()
       }, [text,title])
@@ -39,7 +41,6 @@ const EditorComponent= props=>{
     } 
 
     //update the  data after certain time
-    
     const update = debouce(()=>{
         props.noteUpdate({title:title, description:text},selectedNoteIndex,selectedFolder)
     }, 1500);
@@ -50,22 +51,38 @@ const EditorComponent= props=>{
       };
 
     const folderChange= async(event)=>{
-            await setNewFolder(event.target.value);
-            changeFolder(selectedFolder,event.target.value);        
+        await setNewFolder(event.target.value);
+        changeFolder(selectedFolder,event.target.value);        
     }
 
     const changeFolder= (selectedFolder, newFolder)=>{
         props.changeFolder(selectedFolder, newFolder);
     }
 
+    const expandEditor=()=>{
+        if(expand===false)
+          setExpand(true);
+        else
+          setExpand(false);
+      getExpanded(expand);
+    }
+
     return(
         <div className={classes.editorContainer}>
             <EditIcon className={classes.editIcon} />
-            <input
+            <div className={classes.flex}>
+                <div className={classes.flexInput}>
+                <input
                 className={classes.titleInput}
                 placeholder="Note title..."
                 value={title ? title : ""}
                 onChange={e => updateTitle(e.target.value)}/>
+                </div>
+                {expand?
+                <div className={classes.flexIcon} onClick={expandEditor}><FullscreenIcon/></div>:
+                <div className={classes.flexIcon} onClick={expandEditor}><FullscreenExitIcon/></div>
+                }
+             </div>
                 <FormControl className={classes.formControl}>
                      <InputLabel id="demo-simple-select-label">{`${selectedFolder}`}</InputLabel>
                      <Select
@@ -87,8 +104,7 @@ const EditorComponent= props=>{
                 data={text} 
                 className={classes.editor} 
                 onReady={ editor => {
-                // You can store the "editor" and use when it is needed.
-                console.log( 'Editor is ready to use!', editor );     
+                // You can store the "editor" and use when it is needed.     
                 }}
                 onChange={handleOnChange} 
             />   

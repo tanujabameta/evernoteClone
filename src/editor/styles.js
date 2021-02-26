@@ -24,15 +24,23 @@ const styles = theme => ({
     },
     editIcon: {
       position: 'absolute',
-      left: '310px',
       top: '3px',
       color: 'white',
       width: '10',
       height: '10'
     },
-    editorContainer: {
-      
-    }
+    flex:{
+      display:'flex',
+      flexDirection:'row'
+    },
+    flexInput:{
+      flex:19.5
+    },
+    flexIcon:{
+      flex:0.5,
+      color:'white',
+      backgroundColor:'black'
+    },
   });
   
   export default styles;

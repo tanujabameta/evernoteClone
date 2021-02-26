@@ -12,6 +12,8 @@ function App() {
   const [noteData, setNoteData] = useState(null);
   const [selectedFolder, setSelectedFolder]= useState(null);
 
+  const [expanded, setExpanded] = useState(false);
+
  
   useEffect(()=>{
   axios.get('http://localhost:3000/data/')
@@ -78,20 +80,20 @@ function App() {
      axios.post(`http://localhost:3000/data/`, {"id":n,"files":[]})
   }
 
-  const changeFolder=  (oldFolder,newFolder)=>{
-      console.log(oldFolder,newFolder);
+  const changeFolder = (oldFolder,newFolder)=>{
       noteUpdate(selectedNote,selectedNoteIndex,newFolder);
-      console.log(oldFolder, selectedNote)
       deleteNote(oldFolder,selectedNote);
+  }
 
+  const getExpanded = (expand)=>{
+    setExpanded(expand);
   }
 
   const deleteFolder= (folder)=> axios.delete(`http://localhost:3000/data/${folder}`);
    
-
   return (
     <div className='main'>
-        <div className='slide'>
+      <div className='slide'style={{display: expanded ? 'none' : 'block' }}>
         <SidebarComponent
           noteUpdate= {noteUpdate}
           deleteNote={deleteNote}
@@ -113,6 +115,7 @@ function App() {
               noteData={noteData || []}
               selectedFolder={selectedFolder}
               changeFolder={changeFolder}
+              getExpanded={getExpanded}
               />
             </div>  
             <div className='folderDiv'><Button className='button' onClick={()=>{setSelectedNote(null)}}>Make Folders</Button></div>

@@ -3,7 +3,7 @@
     {
       "files": [
         {
-          "title": "new",
+          "title": "newNote",
           "description": "<p>Write something here.....</p>"
         }
       ],
@@ -21,8 +21,8 @@
     {
       "files": [
         {
-          "title": "fol2",
-          "description": "<p>hello fol2.</p>"
+          "title": "note",
+          "description": "<p>Write something here.....</p>"
         }
       ],
       "id": "Folder2"
@@ -35,10 +35,6 @@
         }
       ],
       "id": "Folder3"
-    },
-    {
-      "id": "Folder4",
-      "files": []
     }
   ]
 }
