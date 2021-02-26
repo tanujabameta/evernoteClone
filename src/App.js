@@ -30,18 +30,6 @@ function App() {
 
    const deleteNote= async (folder,note)=>
    {
-        // setNoteData(noteData.filter(_note => _note !== note))
-        // if(selectedNoteIndex === note){
-        //     setSelectedNote(null);
-        //     setSelectedNoteIndex(null);
-        //  } else {
-        // if (noteData.length > 1) 
-        //  selectNote(noteData[selectedNoteIndex - 1], selectedNoteIndex - 1);
-        // else {
-        //   setSelectedNote(null);
-        //   setSelectedNoteIndex(null);
-        //   }
-        // }
         const currentFolder = noteData.find((fol)=> fol.id === folder);    
         currentFolder["files"].splice(note,1);
         await axios.put(`http://localhost:3000/data/${folder}`,{"files": currentFolder['files']});
